@@ -1,0 +1,27 @@
+{
+  "name": "employeemanagement",
+  "version": "1.0.0",
+  "description": "Manage your employees in this amazing CLI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosephCordell/EmployeeManagement.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JosephCordell/EmployeeManagement/issues"
+  },
+  "homepage": "https://github.com/JosephCordell/EmployeeManagement#readme",
+  "dependencies": {
+    "asciiart-logo": "^0.2.6",
+    "console.table": "^0.10.0",
+    "dotenv": "^10.0.0",
+    "inquirer": "^8.1.0",
+    "mysql": "^2.18.1",
+    "sequelize": "^6.6.2"
+  }
+}
