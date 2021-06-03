@@ -220,22 +220,116 @@ const viewRoles = async () => {
 };
 
 const addRole = async () => {
+  const departments = await connection.query(
+    "SELECT department.id, department.name, SUM(role.salary) AS utilized_budget FROM department LEFT JOIN role ON role.department_id = department.id LEFT JOIN employee ON employee.role_id = role.id GROUP BY department.id, department.name"
+  );
+
+  const departmentOptions = departments.map(({ id, name }) => ({
+    name: name,
+    value: id,
+  }));
+
+  const role = await prompt([
+    {
+      name: "title",
+      message: "What is the name of the new role?",
+    },
+    {
+      name: "salary",
+      message: "What salary will this role have?",
+    },
+    {
+      type: "list",
+      name: "department_id",
+      message: "Which department has this role?",
+      choices: departmentOptions,
+    },
+  ]);
+
+  await connection.query(
+    `INSERT INTO role (title, salary, department_id) values ('${role.title}', '${role.salary}', '${role.department_id}')`
+  );
+
+  console.log(`Added ${role.title} to the database`);
+
   getQs();
 };
 
 const removeRole = async () => {
+  const roles = await connection.query(
+    `SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;`
+  );
+
+  const roleOptions = roles.map(({ id, title }) => ({
+    name: title,
+    value: id,
+  }));
+
+  const { roleId } = await prompt([
+    {
+      type: "list",
+      name: "roleId",
+      message:
+        "Which role would you like to remove? (Warning: This will also remove employees)",
+      choices: roleOptions,
+    },
+  ]);
+
+  await connection.query(`DELETE FROM role WHERE id = ${roleId}`);
+
+  console.log(`That role has been deleted`);
+
   getQs();
 };
 
 const viewDepartments = async () => {
+  const departments = await connection.query(
+    "SELECT department.id, department.name, SUM(role.salary) AS utilized_budget FROM department LEFT JOIN role ON role.department_id = department.id LEFT JOIN employee ON employee.role_id = role.id GROUP BY department.id, department.name"
+  );
+
+  console.log("\n");
+  console.table(departments);
+
   getQs();
 };
 
 const addDepartment = async () => {
+  const department = await prompt([
+    {
+      name: "name",
+      message: "What is the name of the new department?",
+    },
+  ]);
+
+  await connection.query(
+    `INSERT INTO department (name) value ('${department.name}');`
+  );
+
+  console.log(`${department.name} has been added to the database`);
   getQs();
 };
 
 const removeDepartment = async () => {
+  const departments = await connection.query(
+    "SELECT department.id, department.name, SUM(role.salary) AS utilized_budget FROM department LEFT JOIN role ON role.department_id = department.id LEFT JOIN employee ON employee.role_id = role.id GROUP BY department.id, department.name"
+  );
+
+  const departmentOptions = departments.map(({ id, name }) => ({
+    name: name,
+    value: id,
+  }));
+
+  const { departmentId } = await prompt({
+    type: "list",
+    name: "departmentId",
+    message:
+      "Which department do you want to remove? (Warning: This will also remove the roles and employees in the department)",
+    choices: departmentOptions,
+  });
+  await connection.query(`DELETE FROM department WHERE id = ${departmentId}`);
+
+  console.log(`The Department has been deleted`);
+
   getQs();
 };
 
@@ -252,7 +346,6 @@ const getQs = async () => {
         "Add employee",
         "Remove employee",
         "Update employee role",
-        "Update Employee Manager",
         "View all rolls",
         "Add role",
         "Remove role",
@@ -282,9 +375,6 @@ const getQs = async () => {
           break;
         case "Update employee role":
           updateEmployeeRole();
-          break;
-        case "Update Employee Manager":
-          updateEmployeeManager();
           break;
         case "View all rolls":
           viewRoles(); // create function
