@@ -1,7 +1,6 @@
 const inquirer = require("inquirer");
 const { prompt } = require("inquirer");
 const connection = require("../../config/connection");
-const mysql = require("mysql");
 require("console.table");
 
 const findAllEmployees = () => {
