@@ -13,7 +13,7 @@ create table role (
   title varchar(30) unique not null,
   salary DECIMAL not null,
   department_id int not null,
-  foreign key (department_id) references department(id)
+  foreign key (department_id) references department(id) ON DELETE CASCADE
 );
 
 create table employee (
@@ -22,6 +22,6 @@ create table employee (
   last_name varchar(30) not null,
   role_id int not null,
   manager_id int,
-  foreign key (role_id) references role(id),
-  constraint manager_fk foreign key (manager_id) references employee(id)
+  foreign key (role_id) references role(id)ON DELETE CASCADE,
+  constraint manager_fk foreign key (manager_id) references employee(id) ON DELETE CASCADE,
 );

@@ -1,32 +1,15 @@
-const { prompt } = require("inquirer");
 const logo = require("asciiart-logo");
-const db = require("./db");
+const interaction = require("./public/js/interaction.js");
 require("console.table");
 
 // const sequelize = require('./config/connection');
 
-
 const init = () => {
-    const welcome = logo({ name: "Employee Management System" }).render();
-    
-    console.log(welcome);
-    
-    getStarted();
-}
+  const welcome = logo({ name: "Employee Management System" }).render();
 
-const exitQuestions = () => {
-    console.log("Goodbye!");
-    process.exit();
-  }
+  console.log(welcome);
 
-const getStarted = () => {
-
-
-
-    exitQuestions()
-}
-
+  interaction.getQs();
+};
 
 init();
-
-
